@@ -26,12 +26,12 @@ def plot(title, label, train_loss, val_loss):
 
 #########################Model fit functions###############################
 def run_training(model, 
-                 x = x_train, y = y_train, 
-                 loss_fun = negloglik,
-                 num_epochs = num_epochs, 
-                 batch_size = batch_size,
-                 lr = lr, 
-                 optim = tf.keras.optimizers.Adam):
+                 x, y,
+                 loss_fun,
+                 num_epochs, 
+                 batch_size,
+                 lr, 
+                 optim):
   
   #compile model
   model.compile(optimizer = optim(learning_rate = lr),
