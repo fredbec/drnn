@@ -1,4 +1,10 @@
 
+import tensorflow as tf
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
 ###########################Plotting functions############################
 #plot function that is used later on for tracking training process
 def plot(title, label, train_loss, val_loss):
