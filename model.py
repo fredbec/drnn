@@ -1,3 +1,9 @@
+import tensorflow_probability as tfp
+import tensorflow as tf
+
+tfd = tfp.distributions
+
+
 class DDR_MLP(tf.keras.Model):
   def __init__(self, num_hidden_layers, num_hidden_units, activation_fun = "relu"):
     super(DDR_MLP, self).__init__()
