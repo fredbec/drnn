@@ -3,8 +3,16 @@
 #mu_coef is then the shape parameter of the gamma distr
 #sigma_coef is then the scale parameter of the gamma distr
 
-simdata_soep_fct <- function(distr = c("normal", "gamma"), mu_coef, sigma_coef, N = 10000, cutage = c(0, seq(20, 100, by = 10)),
-                         pmars, pedus, yparams, peawe, pdnat, noise = TRUE, norm = TRUE){
+simdata_soep_fct <- function(distr = c("normal", "gamma"), mu_coef, sigma_coef, 
+                             N = 10000, cutage = c(0, seq(20, 100, by = 10)),
+                             pmars, pedus, yparams, peawe, pdnat, 
+                             noise = TRUE, scaling = c("norm", "stand"),
+                             sim_seed = 2912){
+  #seed simulation process
+  set.seed(sim_seed)
+  
+  #some input checks
+  if (length(scaling) > 1) scaling <- NULL
   
   
   #generate dataframe that will contain the simulated data
@@ -86,31 +94,76 @@ simdata_soep_fct <- function(distr = c("normal", "gamma"), mu_coef, sigma_coef, 
   #generate health score simulation values
   
   
+  
   if (distr == "normal"){
+    
     mu_vec <- simdatmat %*% t(as.matrix(mu_coef))
     sigma_vec <- exp(simdatmat %*% t(as.matrix(sigma_coef)))
     #simulate health score from normal distribution
     simdat$mPCS <- rnorm(N, mu_vec, sigma_vec)
+    simdat$mPCS_true_mean <- mu_vec
+    simdat$mPCS_true_sd <- sigma_vec
+    
+    #save names so they don't get thrown out in future step
+    selec_vec <- c("mPCS_true_mean", "mPCS_true_sd")
+    
     
   } else if (distr == "gamma") {
     #for the gamma distribution
     scale_vec <- exp(simdatmat %*% t(as.matrix(mu_coef))) 
     shape_vec <- exp(simdatmat %*% t(as.matrix(sigma_coef)))
+    
     #simulate health score from gamma distribution
     simdat$mPCS <- rgamma(N, scale_vec, shape_vec)
+    simdat$mPCS_true_scale <- scale_vec
+    simdat$mPCS_true_shape <- shape_vec
+    
+    #save names so they don't get thrown out in future step
+    selec_vec <- c("mPCS_true_scale", "mPCS_true_shape")
   }
-
-  simdat <- dplyr::select(simdat, c(names(mu_coef), "mPCS"))
+  
+  #only keep relevant variables for final dataset
+  simdat <- dplyr::select(simdat, c(names(mu_coef), "mPCS", all_of(selec_vec)))
   simdat <- simdat[,-1] #remove intercept column 
   
-  #normalize numerical variables
-  if(norm){
-    for (i in 1:3){
+  
+  
+  #scale numerical variables (normalization or standardization)
+  if (scaling == "norm") {
+    
+    for (i in c(1:3)){
+      meani <- mean(simdat[,i])
+      maxi <- max(simdat[,i])
+      mini <- min(simdat[,i])
+      simdat[,i] <- (simdat[,i] - meani)/(maxi - mini)
+    }
+    #normalize outcome and "true" mean and std
+    mean_mPCS <- mean(simdat$mPCS)
+    max_mPCS <- max(simdat$mPCS)
+    min_mPCS <- min(simdat$mPCS)
+    range_mPCS <- max_mPCS - min_mPCS
+    
+    simdat$mPCS <- (simdat$mPCS - mean_mPCS) / (range_mPCS)
+    simdat$mPCS_true_mean <- (simdat$mPCS_true_mean - mean_mPCS) / (range_mPCS)
+    simdat$mPCS_true_sd <- simdat$mPCS_true_sd /  (range_mPCS)
+    
+    
+  } else if (scaling == "stand") {
+    
+    for (i in c(1:3)){
       meani <- mean(simdat[,i])
       stdi <- sd(simdat[,i])
       simdat[,i] <- (simdat[,i] - meani)/stdi
     }
+    #standardize outcome and "true" mean and std
+    mean_mPCS <- mean(simdat$mPCS)
+    std_mPCS <- sd(simdat$mPCS)
+    
+    simdat$mPCS <- (simdat$mPCS - mean_mPCS) / std_mPCS
+    simdat$mPCS_true_mean <- (simdat$mPCS_true_mean - mean_mPCS) / std_mPCS
+    simdat$mPCS_true_sd <- simdat$mPCS_true_sd /  std_mPCS
   }
+  
   
   return(simdat)
 }

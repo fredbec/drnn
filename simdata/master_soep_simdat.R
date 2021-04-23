@@ -1,8 +1,8 @@
 library(tidyverse)
 library(gamlss)
 
-source("C:/Users/rike/Desktop/OwnCloud Sync/_R/soep_simdata_fct.R")
-sdatm <- read.csv("C:/Users/rike/Desktop/OwnCloud Sync/_SOEP_Data/soepm.csv")
+source("C:/Users/rike/Desktop/Uni/Master/4. Semester (SoSe21)/DDR_Project/drnn/drnn/simdata/soep_simdata_fct.R")
+sdatm <- read.csv("C:/Users/rike/ownCloud/Friederike/DDR/SOEP_Data/soepm.csv")
 
 #age group variable
 cutage <- c(0, seq(20, 100, by = 10))
@@ -88,8 +88,15 @@ m_sigma_coef <- data.frame(t(as.matrix(gammam$sigma.coefficients[1:12])))
 
 
 ########Simulate Data#######
-simdat_soepm <- simdata_soep_fct(distr = "normal", N = 10000, mu_coef = m_mu_coef, sigma_coef = m_sigma_coef, 
-                             cutage = cutage, pmars = mprobs, pedus = eduprobs, yparams = yparams, 
-                             peawe = peawe, pdnat = pdnat, norm = TRUE, noise = TRUE)
+source("C:/Users/rike/Desktop/Uni/Master/4. Semester (SoSe21)/DDR_Project/drnn/drnn/simdata/soep_simdata_fct.R")
+simdat_soepm <- simdata_soep_fct(distr = "normal", N = 10000, 
+                                 mu_coef = m_mu_coef, sigma_coef = m_sigma_coef,
+                                 cutage = cutage, pmars = mprobs, 
+                                 pedus = eduprobs, yparams = yparams,
+                                 peawe = peawe, pdnat = pdnat, 
+                                 scaling = "stand", noise = TRUE,
+                                 sim_seed = 2912)
+
+write.csv(simdat_soepm, "C:/Users/rike/ownCloud/Friederike/DDR/data/fulldatasim_norm.csv", row.names = FALSE)
 
 #write.csv(simdat_soepm, paste0(path, "/data/", "fulldatasim_norm", ".csv"), row.names = FALSE)
