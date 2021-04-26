@@ -1,11 +1,12 @@
 import tensorflow as tf
+import numpy as np
 
 
 class DDR_MLP_basic(tf.keras.Model):
   def __init__(self, num_hidden_layers, num_hidden_units, activation_fun = "relu", 
     output_units = 2):
 
-    super(DDR_MLP, self).__init__()
+    super(DDR_MLP_basic, self).__init__()
     self.num_hidden_layers = num_hidden_layers
     self.num_hidden_units = num_hidden_units
     self.act_fun = activation_fun
@@ -32,4 +33,4 @@ class DDR_MLP_basic(tf.keras.Model):
 
   def call(self, inputs):
     x = self.arch(inputs)
-    return x
+    return tf.cast(x, dtype = tf.float64)
