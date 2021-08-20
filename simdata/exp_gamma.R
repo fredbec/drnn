@@ -21,5 +21,15 @@ exp_gamma <- function(n, k, xrange = c(0, 10), betas = NULL, stand = TRUE){
     data$y <- (data$y - mean(data$y)) / sd(data$y)
   }
   
+  #shuffle data just in case
+  inds <- sample(nrow(data))
+  data <- data[inds,]
+  rownames(data) <- NULL
+  
+  #training/test split
+  inds <- sample(nrow(data), 0.25*nrow(data))
+  data$testid <- 0
+  data$testid[inds] <- 1
+  
   return(data)
 }

@@ -22,6 +22,8 @@ for (i in 1:n_sets){
             file = paste0("data/", "expgamma", k, "d", "_", i, ".csv"))
 }
 
+################INCLUDE SHUFFLE DATA###############
+
 #newdat <- expdat %>% filter(x1 > 0.9, x2 > 0.8, x3 < 0.2)
 #newdat
 #hist(newdat$y, breaks = 50)
