@@ -1,7 +1,7 @@
-exp_gamma <- function(n, k, xrange = c(0, 10), betas = NULL, stand = TRUE){
+exp_gamma <- function(n, k, xrange = c(0, 1), betas = NULL, stand = TRUE){
   beta1 <- runif(k, 0, 1)
   beta2 <- runif(k, 0, 1)
-  beta3 <- runif(k, 0, 10)
+  beta3 <- runif(k, 0, 1)
   
   runifcl <- rep(n, times = k)
   x <- sapply(runifcl, runif, xrange[1], xrange[2])
@@ -18,7 +18,7 @@ exp_gamma <- function(n, k, xrange = c(0, 10), betas = NULL, stand = TRUE){
     for (i in 1:k){
       data[,i] <- (data[,i] - min(data[,i])) / (max(data[,i]) - min(data[,i]))
     }
-    data$y <- (data$y - mean(data$y)) / sd(data$y)
+    data$y <- (data$y - (min(data$y) - 0.01)) / (max(data$y) - min(data$y) )
   }
   
   #shuffle data just in case
