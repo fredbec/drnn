@@ -1,8 +1,9 @@
 rm(list = ls())
+
 setwd("C:/Users/rike/Nextcloud/Uni/Master/4. Semester (SoSe21)/DDR_Project/drnn/simdata")
 
 #load simdata exp_normal function
-source("exp_normal.R")
+source("sin_normal.R")
 
 start_i <- 0 #sets 1-10
 #how many sets to simulate?
@@ -15,14 +16,15 @@ n <- 15000
 k <- 5
 
 #random seed
-set.seed(56234) #this was the one used for sets 1-10
+set.seed(2912) #this was the one used for sets 1-10
 
 #simulate data
 for (i in (start_i+1):(start_i+n_sets)){
-  expdat <- exp_normal(n, k, stand = TRUE)
-  write.csv(expdat, 
-            file = paste0("data/", "expnormal", k, "d", "_", i, ".csv"))
+  sindat <- sin_normal(n, k, stand = TRUE)
+  write.csv(sindat, 
+            file = paste0("data/", "sinnormal", k, "d", "_", i, ".csv"))
 }
+
 
 ######################k = 10##############################
 
@@ -41,11 +43,10 @@ set.seed(56234) #this was the one used for sets 1-10
 
 #simulate data
 for (i in (start_i+1):(start_i+n_sets)){
-  expdat <- exp_normal(n, k, stand = TRUE)
-  write.csv(expdat, 
-            file = paste0("data/", "expnormal", k, "d", "_", i, ".csv"))
+  sindat <- sin_normal(n, k, stand = TRUE)
+  write.csv(sindat, 
+            file = paste0("data/", "sinnormal", k, "d", "_", i, ".csv"))
 }
-
 
 
 
@@ -62,11 +63,11 @@ n <- 15000
 k <- 20
 
 #random seed
-set.seed(2345) #this was the one used for sets 1-10
+set.seed(2527) #this was the one used for sets 1-10
 
 #simulate data
 for (i in (start_i+1):(start_i+n_sets)){
-  expdat <- exp_normal(n, k, stand = TRUE)
-  write.csv(expdat, 
-            file = paste0("data/", "expnormal", k, "d", "_", i, ".csv"))
+  sindat <- sin_normal(n, k, stand = TRUE)
+  write.csv(sindat, 
+            file = paste0("data/", "sinnormal", k, "d", "_", i, ".csv"))
 }
