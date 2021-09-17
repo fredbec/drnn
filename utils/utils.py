@@ -78,7 +78,7 @@ def run_training(model,
                                                  restore_best_weights = True)]
 
   elif schedule:
-    #print("doing schedule")
+    print("doing schedule")
     callback = [tf.keras.callbacks.LearningRateScheduler(scheduler)]
   
   elif earlystop:
